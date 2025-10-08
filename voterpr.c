@@ -70,17 +70,19 @@
     int reswitch(){
         FILE *voter_file=fopen("voters.txt","a");  
         FILE *result_file=fopen("results.txt","a"); 
+        int num=1;
     
         switch(choice){
 		case(1):
 		 printf("SUCCESS! You voted for:  Niroshan Silva  (National People's Power )\n");
          printf("\n--- Thank you for voting! ---\n");
-         fprintf(voter_file,"%d\n",choice);
-         fprintf(result_file,"%d+%d\n",choice);
+         fprintf(voter_file,"%d\n",num);
+         fprintf(result_file,"%d+%d\n",num);
 		 break;
 		case(2):
 		printf("SUCCESS! You voted for:  Lakmali Perera   (National People's Power )\n");
          printf("\n--- Thank you for voting! ---\n");
+         fprintf(voter_file,"%d\n",num);
 		break;
 		case(3):
 		printf("SUCCESS! You voted for:  Dilshan Fernando  (National People's Power )\n");
