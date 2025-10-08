@@ -2,14 +2,14 @@
 
 	int remenu();  //create user define function for candidate selection interface
     int reswitch();  //create user define function for switch case
-
-
+       
 	int choice;
+      
 
 	int main(){
-        FILE *voter_flie= fopen("voters.txt","a");  //create flie for store voters 
-       FILE *result_flie= fopen("results.txt","a"); //create flie for update the result
-		
+         FILE *voter_file=fopen("voters.txt","a");  //create file for store voters 
+        FILE *result_file=fopen("results.txt","a"); //create file for update the result
+    
        choice=remenu();
         reswitch();
 	
@@ -68,10 +68,15 @@
 	return choice;
 	}
     int reswitch(){
+        FILE *voter_file=fopen("voters.txt","a");  
+        FILE *result_file=fopen("results.txt","a"); 
+    
         switch(choice){
 		case(1):
 		 printf("SUCCESS! You voted for:  Niroshan Silva  (National People's Power )\n");
          printf("\n--- Thank you for voting! ---\n");
+         fprintf(voter_file,"%d\n",choice);
+         fprintf(result_file,"%d+%d\n",choice);
 		 break;
 		case(2):
 		printf("SUCCESS! You voted for:  Lakmali Perera   (National People's Power )\n");
