@@ -1,16 +1,15 @@
 #include<stdio.h>
 
-	int remenu();
-    int reswitch();
+	int remenu();  //create user define function for candidate selection interface
+    int reswitch();  //create user define function for switch case
 
 
 	int choice;
+
 	int main(){
 		
 	choice=remenu();
- 
-	
-    reswitch();
+     reswitch();
     
 	return 0;
 
@@ -58,8 +57,8 @@
 	printf("| -----------!!!!END!!!!!-----------          |\n");
 	printf("|                                             |\n");
     printf("+---------------------------------------------+\n");
-	printf("\nEnter the number of your chosen candidate(1-15):");
-	scanf("%d",&choice);
+	printf("\nEnter the number of your chosen candidate(1-15):");   
+	scanf("%d",&choice);    //get user choice and scan 
 	
 	return choice;
 	}
@@ -127,10 +126,10 @@
 		break;
 		default:
         printf("\n--- INVALID NUMBER! ---\n");
-        remenu();
-        reswitch();
+        remenu();   //call function 
+        reswitch(); //call function itself
 
        
 	return choice;	
-	}
+	    }
     }
