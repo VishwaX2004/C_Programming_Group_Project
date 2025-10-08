@@ -7,11 +7,16 @@
 	int choice;
 
 	int main(){
+        FILE *voter_flie= fopen("voters.txt","a");  //create flie for store voters 
+       FILE *result_flie= fopen("results.txt","a"); //create flie for update the result
 		
-	choice=remenu();
-     reswitch();
+       choice=remenu();
+        reswitch();
+	
+       
     
 	return 0;
+  
 
 }
 
