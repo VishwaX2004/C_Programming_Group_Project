@@ -12,7 +12,7 @@ int main(){
 
     do {
         printf("\n");
-        // Get input for the main page
+ 
         userinputMP = mainpage();
 
         switch (userinputMP){
