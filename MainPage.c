@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-// Define maximum length for strings to prevent buffer overflow
-#define MAX_ADMIN_STRING_LENGTH 50
+// Define file admin.txt
 #define FILENAME "Admin.txt"
 
 // Function prototypes
