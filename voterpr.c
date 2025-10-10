@@ -7,17 +7,11 @@
       
 
 	int main(){
-         FILE *voter_file=fopen("voters.txt","a");  //create file for store voters 
-        FILE *result_file=fopen("results.txt","a"); //create file for update the result
-    
+        
        choice=remenu();
         reswitch();
-	
-       
-    
-	return 0;
-  
 
+	return 0;
 }
 
 	int remenu(){
@@ -71,77 +65,108 @@
         FILE *voter_file=fopen("voters.txt","a");  
         FILE *result_file=fopen("results.txt","a"); 
         int num=1;
-    
+		int sum=0;
+		sum=sum+num;
+		
         switch(choice){
 		case(1):
 		 printf("SUCCESS! You voted for:  Niroshan Silva  (National People's Power )\n");
          printf("\n--- Thank you for voting! ---\n");
-         fprintf(voter_file,"%d\n",num);
-         fprintf(result_file,"%d+%d\n",num);
+         fprintf(voter_file,"Niroshan Silva  (National People's Power ):%d\n",num);
+         fprintf(result_file,"Niroshan Silva  (National People's Power )voter's sum:%d\n",sum);
 		 break;
 		case(2):
 		printf("SUCCESS! You voted for:  Lakmali Perera   (National People's Power )\n");
          printf("\n--- Thank you for voting! ---\n");
-         fprintf(voter_file,"%d\n",num);
+         fprintf(voter_file,"Lakmali Perera   (National People's Power ):%d\n",num);
+         fprintf(result_file,"Lakmali Perera   (National People's Power )voter's sum:%d\n",sum);
 		break;
 		case(3):
 		printf("SUCCESS! You voted for:  Dilshan Fernando  (National People's Power )\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Dilshan Fernando  (National People's Power ):%d\n",num);
+         fprintf(result_file,"Dilshan Fernando  (National People's Power )voter's sum:%d\n",sum);
 		break;
 		case(4):
 		printf("SUCCESS! You voted for:  Priyanka Dias   (Samagi Jana Balawegaya)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Priyanka Dias   (Samagi Jana Balawegaya):%d\n",num);
+         fprintf(result_file,"Priyanka Dias   (Samagi Jana Balawegaya)voter's sum:%d\n",sum);
 		break;
 		case(5):
 		printf("SUCCESS! You voted for:  Chaminda Jayasinghe  (Samagi Jana Balawegaya)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Chaminda Jayasinghe  (Samagi Jana Balawegaya):%d\n",num);
+         fprintf(result_file,"Chaminda Jayasinghe  (Samagi Jana Balawegaya)voter's sum:%d\n",sum);
 		break;
 		case(6):
 		printf("SUCCESS! You voted for:  Nishadi Bandara  (Samagi Jana Balawegaya)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file," Nishadi Bandara  (Samagi Jana Balawegaya):%d\n",num);
+         fprintf(result_file," Nishadi Bandara  (Samagi Jana Balawegaya)voter's sum:%d\n",sum);
 		break;
 		case(7):
 		printf("SUCCESS! You voted for:  Asiri Wijesinghe  (New Democratic Front)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Asiri Wijesinghe  (New Democratic Front):%d\n",num);
+         fprintf(result_file,"Asiri Wijesinghe  (New Democratic Front)voter's sum:%d\n",sum);
 		break;
 		case(8):
 		printf("SUCCESS! You voted for:  Kavisha Senanayake   (New Democratic Front)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Kavisha Senanayake   (New Democratic Front):%d\n",num);
+         fprintf(result_file,"Kavisha Senanayake   (New Democratic Front)voter's sum:%d\n",sum);
 		break;
 		case(9):
 		printf("SUCCESS! You voted for:  Ranidu Rajapaksa   (New Democratic Front)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file," Ranidu Rajapaksa   (New Democratic Front):%d\n",num);
+         fprintf(result_file," Ranidu Rajapaksa   (New Democratic Front)voter's sum:%d\n",sum);
 		break;
 		case(10):
 		printf("SUCCESS! You voted for:  Tharushi De Silva   (Sarvajana Balaya)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"harushi De Silva   (Sarvajana Balaya):%d\n",num);
+         fprintf(result_file,"harushi De Silva   (Sarvajana Balaya)voter's sum:%d\n",sum);
 		break;
 		case(11):
 		printf("SUCCESS! You voted for:  Nimesh Hewage  (Sarvajana Balaya)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file," Nimesh Hewage  (Sarvajana Balaya):%d\n",num);
+         fprintf(result_file," Nimesh Hewage  (Sarvajana Balaya)voter's sum:%d\n",sum);
 		break;
 		case(12):
 		printf("SUCCESS! You voted for:  Sanali Fonseka  (Sarvajana Balaya)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Sanali Fonseka  (Sarvajana Balaya):%d\n",num);
+         fprintf(result_file,"Sanali Fonseka  (Sarvajana Balaya)voter's sum:%d\n",sum);
 		break;
 		case(13):
 		printf("SUCCESS! You voted for:  Supun Dissanayake  ( Democratic Tamil National Alliance)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Supun Dissanayake  ( Democratic Tamil National Alliance):%d\n",num);
+         fprintf(result_file,"Supun Dissanayake  ( Democratic Tamil National Alliance)voter's sum:%d\n",sum);
 		break;
 		case(14):
 		printf("SUCCESS! You voted for:  Manori Gamage   ( Democratic Tamil National Alliance)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Manori Gamage   ( Democratic Tamil National Alliance):%d\n",num);
+         fprintf(result_file,"Manori Gamage   ( Democratic Tamil National Alliance)voter's sum:%d\n",sum);
 		break;
 		case(15):
 		printf("SUCCESS! You voted for:  Akila Gunawardena  ( Democratic Tamil National Alliance)\n");
          printf("\n--- Thank you for voting! ---\n");
+		  fprintf(voter_file,"Akila Gunawardena  ( Democratic Tamil National Alliance):%d\n",num);
+         fprintf(result_file,"Akila Gunawardena  ( Democratic Tamil National Alliance)voter's sum:%d\n",sum);
 		break;
 		default:
-        printf("\n--- INVALID NUMBER! ---\n");
+		printf("\t\n--- INVALID NUMBER! ---\n");
         remenu();   //call function 
         reswitch(); //call function itself
+		
+		fclose(voter_file);
+		fclose(result_file);
 
-       
 	return choice;	
 	    }
     }
