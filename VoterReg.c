@@ -1,20 +1,20 @@
 #include <stdio.h>
 
-struct voter {
-    char NIC[12];
-    char name[50];
+struct voter {  // structure to hold voter details
+    char NIC[12];   // National Identity Card number
+    char name[20];  // voter's full name
     int age;
-    char password[20];
+    char password[8]; // voter's account password
 };
 
 int main() {
 
     struct voter voter;
 
-    voter.NIC[0] = '\0';
-    voter.name[0] = '\0';
-    voter.age = 0;
-    voter.password[0] = '\0';
+    voter.NIC[0] = '\0';  // initialize NIC to empty string
+    voter.name[0] = '\0';  // initialize name to empty string
+    voter.age = 0;  // initialize age to 0
+    voter.password[0] = '\0';  // initialize password to empty string   
 
 
 
@@ -54,7 +54,7 @@ int main() {
         }
         
         
-        FILE *NICFile = fopen("NIC.txt", "a"); // creates a text file to store NIC numbers
+        FILE *NICFile = fopen("NIC.txt", "w"); // creates a text file to store NIC numbers
         fprintf(NICFile, "%s\n", voter.NIC);
         fclose(NICFile);
 
@@ -67,10 +67,11 @@ int main() {
 
         printf("\n");
 
-        printf("\x1b[1;32m");
-        while (1) {  // loop to ensure age is 18 or above
+       while (1) {  // loop to ensure age is 18 or above
+            printf("\x1b[1;33m");  //yellow color
             printf("\t(Note: You must be at least 18 years old to register to vote)\n");  //printing note
             printf("\n");
+            printf("\x1b[1;32m");
             printf("\tAge:"); // voter's age
             printf("\x1b[1;36m");
             scanf("%d", &voter.age);
@@ -86,21 +87,39 @@ int main() {
         
         printf("\n");
 
-        printf("\x1b[1;32m");
-        printf("\tPassword:"); // voter's account password
-        printf("\x1b[1;36m");
-        scanf("%s", &voter.password);
+        int count1 = 0;
+        while (1) {  // loop to ensure password is not empty and has correct length
+            printf("\x1b[1;33m");
+            printf("\tSet a Password (max 8 characters)\n"); // instruction to set password
+            printf("\x1b[1;32m");
+            printf("\tPassword:"); // voter's account password
+            printf("\x1b[1;36m");
+            scanf("%s", &voter.password);
+            printf("\n");
+            count1 = 0;
+            while (voter.password[count1] != '\0') {
+                count1++;
+            }
+            if (count1 <= 8) {
+                break;
+            } else {
+                printf("\x1b[1;31m"); //red color
+                printf("\t\t\t!!Invalid Password. Please enter a valid password!!\n"); //invalid message
+                printf("\n");
+                printf("\x1b[1;32m");
+            }
+        }
 
-        FILE *passwordFile = fopen("password.txt", "a");  // creates a text file to store passwords
+        FILE *passwordFile = fopen("password.txt", "w");  // creates a text file to store passwords
         fprintf(passwordFile, "%s\n", voter.password);
 
         printf("\n");
+
+        printf("\x1b[1;32m");
+        printf("\t\t\t!!!Voter Registration Successful!!!\n"); // success message
+        printf("\t\tYou can now log in using your NIC and password....\n");
+        printf("\n");
         printf("\x1b[0m");  //white color
-
-
-
-
-
 
 return 0;
 
