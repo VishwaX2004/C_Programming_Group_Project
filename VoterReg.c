@@ -117,7 +117,7 @@ int main() {
 
         printf("\x1b[1;32m");
         printf("\t\t\t!!!Voter Registration Successful!!!\n"); // success message
-        printf("\t\tYou can now log in using your NIC and password....\n");
+        printf("\t\tYou can now login as a voter using your NIC and password...\n");
         printf("\n");
         printf("\x1b[0m");  //white color
 
