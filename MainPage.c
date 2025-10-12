@@ -1,18 +1,16 @@
 #include <stdio.h>
 #include <string.h>
 
-<<<<<<< Updated upstream
+
 // Define file admin.txt
-=======
->>>>>>> Stashed changes
 #define FILENAME "Admin.txt"
 
 int mainpage();
-<<<<<<< Updated upstream
+
 int AdminLoginUI();
 void AdminLogin();
 void candidate();
-=======
+
 int AdminLogin();
 void candidate();
 void voterRegister();
@@ -21,7 +19,7 @@ void voterRegister();
 int userinputRL;
 int userinputMP;
 int AdminInput;
-<<<<<<< Updated upstream
+
 
 // Helper function to remove the newline character from a string read by fgets
 void remove_newline(char *str) {
@@ -212,8 +210,6 @@ struct voter
     char password[8];
 };
 
-<<<<<<< Updated upstream
-=======
 int main()
 {
 
@@ -258,13 +254,12 @@ int main()
     return 0;
 }
 
->>>>>>> Stashed changes
 int mainpage()
 {
 
     printf("\n");
     int choiceMP;
-<<<<<<< Updated upstream
+
         printf("\x1b[0m");
         printf("+------------------------------------+\n");
         printf("|                                    |\n");
@@ -542,7 +537,6 @@ void voterRegister()
         sscanf(buffer, "%d", &choiceRL);
         printf("\x1b[0m");
 
-<<<<<<< Updated upstream
     return choiceRL;
 }
 
