@@ -261,21 +261,22 @@ void candidate()
     printf("+ ---------------------------------------------------------------------------- +\n");
     printf("\n                   \x1b[1;32mPlease enter your details below\x1b[0m                            \n");
     printf("\x1b[0m");
-    
+
     // Clear input buffer before reading name
-    while(getchar() != '\n');
-    
+    while (getchar() != '\n')
+        ;
+
     printf("\n                   1. Name: ");
     fgets(name, sizeof(name), stdin);
     // Remove trailing newline from fgets
     name[strcspn(name, "\n")] = '\0';
-    
+
     printf("\n                   2. Political Party Number: ");
     scanf("%s", number);
-    
+
     printf("\n                   3. NIC: ");
     scanf("%s", nic);
-    
+
     if (strlen(nic) != 12 || number[0] < '1' || number[0] > '5')
     {
         printf("\n                  *Invalid Input");
@@ -301,7 +302,7 @@ void candidate()
         case '5':
             strcpy(party, "Democratic Tamil National Alliance");
             break;
-        
+
         default:
             printf("invalid number");
         }
@@ -316,7 +317,8 @@ void candidate()
     fclose(pfile);
 }
 
-int voterRegister(){
+int voterRegister()
+{
 
     int choiceRL;
 
@@ -403,7 +405,8 @@ int voterRegister(){
 
             printf("\n");
 
-            while(getchar() != '\n');
+            while (getchar() != '\n')
+                ;
 
             printf("\x1b[1;32m");
             printf("\tName:");
@@ -484,124 +487,127 @@ int voterRegister(){
         case 2:
             // login as voter
             printf("\x1b[0m");
-    printf("+-------------------------------------------------+\n");
-    printf("|                                                 |\n");
-    printf("|\x1b[1;33m               --- Voter Login ---               \x1b[0m|\n");
-    printf("|                                                 |\n");
-    printf("|-------------------------------------------------|\n");
-    printf("|                                                 |\n");
-    printf("|         Please enter your login details         |\n");
-    printf("|                                                 |\n");
-    printf("+-------------------------------------------------+\n");
-    printf("\n\n");
+            printf("+-------------------------------------------------+\n");
+            printf("|                                                 |\n");
+            printf("|\x1b[1;33m               --- Voter Login ---               \x1b[0m|\n");
+            printf("|                                                 |\n");
+            printf("|-------------------------------------------------|\n");
+            printf("|                                                 |\n");
+            printf("|         Please enter your login details         |\n");
+            printf("|                                                 |\n");
+            printf("+-------------------------------------------------+\n");
+            printf("\n\n");
 
-    // Open the file and read the NIC number
-    FILE *NICfile = fopen("NIC.txt", "r");
-    if (NICfile == NULL)
-    {
-        printf("\x1b[31mError: Unable to open NIC.txt file.\x1b[0m\n");
-        return 1;
-    }
+            // Open the file and read the NIC number
+            FILE *NICfile = fopen("NIC.txt", "r");
+            if (NICfile == NULL)
+            {
+                printf("\x1b[31mError: Unable to open NIC.txt file.\x1b[0m\n");
+                return 1;
+            }
 
-    char nicFromFile[13];     // Increased size to 13 (12 + null terminator)
-    char userInputBuffer[13]; // Increased size to 13
+            char nicFromFile[13];     // Increased size to 13 (12 + null terminator)
+            char userInputBuffer[13]; // Increased size to 13
 
-    if (fgets(nicFromFile, sizeof(nicFromFile), NICfile) == NULL)
-    {
-        printf("\x1b[31mError: Unable to read NIC from file.\x1b[0m\n");
-        fclose(NICfile);
-        return 1;
-    }
-    fclose(NICfile);
+            if (fgets(nicFromFile, sizeof(nicFromFile), NICfile) == NULL)
+            {
+                printf("\x1b[31mError: Unable to read NIC from file.\x1b[0m\n");
+                fclose(NICfile);
+                return 1;
+            }
+            fclose(NICfile);
 
-    // Remove newline character from the NIC read from file
-    nicFromFile[strcspn(nicFromFile, "\n")] = 0;
+            // Remove newline character from the NIC read from file
+            nicFromFile[strcspn(nicFromFile, "\n")] = 0;
 
-    int validNIC = 0;
-    while (!validNIC)
-    {
-        printf("\x1b[1;32m");
-        printf("NIC: ");
-        printf("\x1b[1;36m");
-        if (scanf("%12s", userInputBuffer) != 1)
-        {
-            printf("\x1b[31m\t\t\t!!!Input error!!! Please try again.\n\x1b[0m");
-            while (getchar() != '\n'); // Clear input buffer
-            continue;
-        }
-        while (getchar() != '\n'); // Clear remaining input buffer
+            int validNIC = 0;
+            while (!validNIC)
+            {
+                printf("\x1b[1;32m");
+                printf("NIC: ");
+                printf("\x1b[1;36m");
+                if (scanf("%12s", userInputBuffer) != 1)
+                {
+                    printf("\x1b[31m\t\t\t!!!Input error!!! Please try again.\n\x1b[0m");
+                    while (getchar() != '\n')
+                        ; // Clear input buffer
+                    continue;
+                }
+                while (getchar() != '\n')
+                    ; // Clear remaining input buffer
 
-        if (strcmp(userInputBuffer, nicFromFile) == 0)
-        {
-            printf("\x1b[32m\t\t\t!!!NIC number is okay!!!\n\x1b[0m");
-            validNIC = 1;
-        }
-        else
-        {
-            printf("\x1b[31m\t\t\t!!!Invalid NIC!!! Please try again.\n\x1b[0m");
-        }
-    }
+                if (strcmp(userInputBuffer, nicFromFile) == 0)
+                {
+                    printf("\x1b[32m\t\t\t!!!NIC number is okay!!!\n\x1b[0m");
+                    validNIC = 1;
+                }
+                else
+                {
+                    printf("\x1b[31m\t\t\t!!!Invalid NIC!!! Please try again.\n\x1b[0m");
+                }
+            }
 
-    passwordFile = fopen("password.txt", "r");
-    if (passwordFile == NULL)
-    {
-        printf("\x1b[31mError: Unable to open password.txt file.\x1b[0m\n");
-        return 1;
-    }
+            passwordFile = fopen("password.txt", "r");
+            if (passwordFile == NULL)
+            {
+                printf("\x1b[31mError: Unable to open password.txt file.\x1b[0m\n");
+                return 1;
+            }
 
-    char passwordFromFile[10];  // Increased size to 10 (8 + newline + null)
-    char userPasswordInput[10]; // Increased size to 10
+            char passwordFromFile[10];  // Increased size to 10 (8 + newline + null)
+            char userPasswordInput[10]; // Increased size to 10
 
-    if (fgets(passwordFromFile, sizeof(passwordFromFile), passwordFile) == NULL)
-    {
-        printf("\x1b[31mError: Unable to read password from file.\x1b[0m\n");
-        fclose(passwordFile);
-        return 1;
-    }
-    fclose(passwordFile);
+            if (fgets(passwordFromFile, sizeof(passwordFromFile), passwordFile) == NULL)
+            {
+                printf("\x1b[31mError: Unable to read password from file.\x1b[0m\n");
+                fclose(passwordFile);
+                return 1;
+            }
+            fclose(passwordFile);
 
-    // Remove newline character from the password read from file
-    passwordFromFile[strcspn(passwordFromFile, "\n")] = 0;
-    printf("\n");
+            // Remove newline character from the password read from file
+            passwordFromFile[strcspn(passwordFromFile, "\n")] = 0;
+            printf("\n");
 
-    while (1)
-    {
-        printf("\x1b[1;32m"); // green color
-        printf("Password: ");
-        printf("\x1b[1;36m"); // blue color
-        if (scanf("%9s", userPasswordInput) != 1)
-        {
-            printf("\x1b[31m\t\t\t!!!Input error!!!\n\x1b[0m");
-            while (getchar() != '\n'); // Clear input buffer
-            continue;
-        }
-        while (getchar() != '\n'); // Clear remaining input buffer
+            while (1)
+            {
+                printf("\x1b[1;32m"); // green color
+                printf("Password: ");
+                printf("\x1b[1;36m"); // blue color
+                if (scanf("%9s", userPasswordInput) != 1)
+                {
+                    printf("\x1b[31m\t\t\t!!!Input error!!!\n\x1b[0m");
+                    while (getchar() != '\n')
+                        ; // Clear input buffer
+                    continue;
+                }
+                while (getchar() != '\n')
+                    ; // Clear remaining input buffer
 
-        if (strcmp(userPasswordInput, passwordFromFile) == 0)
-        {
+                if (strcmp(userPasswordInput, passwordFromFile) == 0)
+                {
+                    printf("\x1b[32m");
+                    printf("\t\t\t!!!Password is okay!!!\n\n");
+                    printf("\x1b[0m");
+                    break;
+                }
+                else
+                {
+                    printf("\x1b[31m");
+                    printf("\t\t\t!!!Invalid Password!!!\n");
+                    printf("\x1b[0m");
+                }
+            }
+
             printf("\x1b[32m");
-            printf("\t\t\t!!!Password is okay!!!\n\n");
+            printf("\t\t\t!!!Login Successful!!!\n\n");
+            printf("\t\t -- you are now logged in as a voter --\n");
+            printf("\t\t\t-- you can vote now --\n");
+            printf("\n");
             printf("\x1b[0m");
-            break;
-        }
-        else
-        {
-            printf("\x1b[31m");
-            printf("\t\t\t!!!Invalid Password!!!\n");
-            printf("\x1b[0m");
-        }
-    }
 
-    printf("\x1b[32m");
-    printf("\t\t\t!!!Login Successful!!!\n\n");
-    printf("\t\t -- you are now logged in as a voter --\n");
-    printf("\t\t\t-- you can vote now --\n");
-    printf("\n");
-    printf("\x1b[0m");
-
-    choice = remenu();
-    reswitch();
-            
+            choice = remenu();
+            reswitch();
 
             break;
 
@@ -627,55 +633,58 @@ int voterRegister(){
 
 int remenu()
 {
-    printf("\n");
     printf("+---------------------------------------------+\n");
-    printf("|          --- Candidate Selection ---        |\n");
+    printf("|     \x1b[1;33m     --- Candidate Selection ---   \x1b[1;0m     |\n");
     printf("|---------------------------------------------|\n");
     printf("|                                             |\n");
-    printf("| Party 1: National People's Power            |\n");
+    printf("| \x1b[1;36m Party 1: National People's Power     \x1b[1;0m      |\n");
     printf("|                                             |\n");
-    printf("| 1. Niroshan Silva                           |\n");
-    printf("| 2. Lakmali Perera                           |\n");
-    printf("| 3. Dilshan Fernando                         |\n");
+    printf("|   1. Niroshan Silva                         |\n");
+    printf("|   2. Lakmali Perera                         |\n");
+    printf("|   3. Dilshan Fernando                       |\n");
     printf("|                                             |\n");
-    printf("| Party 2: Samagi Jana Balawegaya             |\n");
+    printf("| \x1b[1;36mParty 2: Samagi Jana Balawegaya         \x1b[1;0m    |\n");
     printf("|                                             |\n");
-    printf("| 4. Priyanka Dias                            |\n");
-    printf("| 5. Chaminda Jayasinghe                      |\n");
-    printf("| 6. Nishadi Bandara                          |\n");
+    printf("|   4. Priyanka Dias                          |\n");
+    printf("|   5. Chaminda Jayasinghe                    |\n");
+    printf("|   6. Nishadi Bandara                        |\n");
     printf("|                                             |\n");
-    printf("| Party 3: New Democratic Front               |\n");
+    printf("|  \x1b[1;36mParty 3: New Democratic Front         \x1b[1;0m     |\n");
     printf("|                                             |\n");
-    printf("| 7. Asiri Wijesinghe                         |\n");
-    printf("| 8. Kavisha Senanayake                       |\n");
-    printf("| 9. Ranidu Rajapaksa                         |\n");
+    printf("|   7. Asiri Wijesinghe                       |\n");
+    printf("|   8. Kavisha Senanayake                     |\n");
+    printf("|   9. Ranidu Rajapaksa                       |\n");
     printf("|                                             |\n");
-    printf("| Party 4: Sarvajana Balaya                   |\n");
+    printf("|  \x1b[1;36mParty 4: Sarvajana Balaya         \x1b[1;0m         |\n");
     printf("|                                             |\n");
-    printf("| 10. Tharushi De Silva                       |\n");
-    printf("| 11. Nimesh Hewage                           |\n");
-    printf("| 12. Sanali Fonseka                          |\n");
+    printf("|   10. Tharushi De Silva                     |\n");
+    printf("|   11. Nimesh Hewage                         |\n");
+    printf("|   12. Sanali Fonseka                        |\n");
     printf("|                                             |\n");
-    printf("| Party 5: Democratic Tamil National Alliance |\n");
+    printf("| \x1b[1;36mParty 5: Democratic Tamil National Alliance \x1b[1;0m|\n");
     printf("|                                             |\n");
-    printf("| 13. Supun Dissanayake                       |\n");
-    printf("| 14. Manori Gamage                           |\n");
-    printf("| 15. Akila Gunawardena                       |\n");
+    printf("|   13. Supun Dissanayake                     |\n");
+    printf("|   14. Manori Gamage                         |\n");
+    printf("|   15. Akila Gunawardena                     |\n");
     printf("|                                             |\n");
     printf("|---------------------------------------------|\n");
     printf("|                                             |\n");
-    printf("| -----------!!!!END!!!!!-----------          |\n");
+    printf("| \x1b[1;32m  ... Be the change you wish to see...  \x1b[1;0m    |\n");
+    printf("| \x1b[1;32m        ... Every Vote Counts! ...   \x1b[1;0m       |\n");
     printf("|                                             |\n");
     printf("+---------------------------------------------+\n");
-    printf("\nEnter the number of your chosen candidate (1-15): ");
-    
+
+    printf("\n\x1b[1;33m Enter the number of your chosen candidate (1-15): \x1b[1;0m ");
+
     if (scanf("%d", &choice) != 1)
     {
         printf("\n\t--- INVALID INPUT! Please enter a number. ---\n");
-        while (getchar() != '\n'); // Clear input buffer
+        while (getchar() != '\n')
+            ; // Clear input buffer
         return remenu();
     }
-    while (getchar() != '\n'); // Clear remaining input buffer
+    while (getchar() != '\n')
+        ; // Clear remaining input buffer
 
     // Simple input validation
     if (choice < 1 || choice > 15)
