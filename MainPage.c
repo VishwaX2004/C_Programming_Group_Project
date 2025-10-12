@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define FILENAME "Admin.txt"
 
 int mainpage();
 int AdminLogin();
 void candidate();
-void voterRegister();
+int voterRegister();
 
 int userinputRL;
 int userinputMP;
@@ -21,6 +22,7 @@ void remove_newline(char *str)
     }
 }
 
+// tg2078
 struct voter
 {
     char NIC[12];
@@ -28,6 +30,13 @@ struct voter
     int age;
     char password[8];
 };
+
+// tg2069
+int remenu();
+int reswitch();
+int update_votes(const char *candidate_name, const char *party_name);
+
+int choice;
 
 int main()
 {
@@ -42,22 +51,23 @@ int main()
         {
 
         case 1:
+            printf("\n       ----! Voter Registration and Login Selected !----\n\n");
             voterRegister();
             break;
 
         case 2:
-            printf("\n       ----! Canditdate Registration selected !----\n");
+            printf("\n       ----! Canditdate Registration selected !----\n\n");
             candidate();
             break;
 
         case 3:
-            printf("\n       ----! Admin Login selected !----\n");
+            printf("\n       ----! Admin Login selected !----\n\n");
             AdminLogin();
 
             break;
 
         case 4:
-            printf("Exiting system...\n");
+            printf("Exiting system...\n\n");
             break;
 
         default:
@@ -251,12 +261,21 @@ void candidate()
     printf("+ ---------------------------------------------------------------------------- +\n");
     printf("\n                   \x1b[1;32mPlease enter your details below\x1b[0m                            \n");
     printf("\x1b[0m");
+    
+    // Clear input buffer before reading name
+    while(getchar() != '\n');
+    
     printf("\n                   1. Name: ");
-    scanf("%s", name);
-    printf("\n                   2. Political Party Name: ");
-    scanf(" %s", number);
+    fgets(name, sizeof(name), stdin);
+    // Remove trailing newline from fgets
+    name[strcspn(name, "\n")] = '\0';
+    
+    printf("\n                   2. Political Party Number: ");
+    scanf("%s", number);
+    
     printf("\n                   3. NIC: ");
     scanf("%s", nic);
+    
     if (strlen(nic) != 12 || number[0] < '1' || number[0] > '5')
     {
         printf("\n                  *Invalid Input");
@@ -279,9 +298,12 @@ void candidate()
         case '4':
             strcpy(party, "Sarvajana Balaya");
             break;
-        default:
+        case '5':
             strcpy(party, "Democratic Tamil National Alliance");
             break;
+        
+        default:
+            printf("invalid number");
         }
 
         printf("\n");
@@ -294,8 +316,7 @@ void candidate()
     fclose(pfile);
 }
 
-void voterRegister()
-{
+int voterRegister(){
 
     int choiceRL;
 
@@ -382,10 +403,12 @@ void voterRegister()
 
             printf("\n");
 
+            while(getchar() != '\n');
+
             printf("\x1b[1;32m");
             printf("\tName:");
             printf("\x1b[1;36m");
-            scanf("%s", voter.name);
+            fgets(voter.name, sizeof(voter.name), stdin);
 
             printf("\n");
 
@@ -453,21 +476,142 @@ void voterRegister()
             printf("\n");
             printf("\x1b[0m");
 
-            while (getchar() != '\n');
+            while (getchar() != '\n')
+                ;
 
             break;
 
         case 2:
-            printf("\n       ----! Login selected !----\n");
+            // login as voter
+            printf("\x1b[0m");
+    printf("+-------------------------------------------------+\n");
+    printf("|                                                 |\n");
+    printf("|\x1b[1;33m               --- Voter Login ---               \x1b[0m|\n");
+    printf("|                                                 |\n");
+    printf("|-------------------------------------------------|\n");
+    printf("|                                                 |\n");
+    printf("|         Please enter your login details         |\n");
+    printf("|                                                 |\n");
+    printf("+-------------------------------------------------+\n");
+    printf("\n\n");
+
+    // Open the file and read the NIC number
+    FILE *NICfile = fopen("NIC.txt", "r");
+    if (NICfile == NULL)
+    {
+        printf("\x1b[31mError: Unable to open NIC.txt file.\x1b[0m\n");
+        return 1;
+    }
+
+    char nicFromFile[13];     // Increased size to 13 (12 + null terminator)
+    char userInputBuffer[13]; // Increased size to 13
+
+    if (fgets(nicFromFile, sizeof(nicFromFile), NICfile) == NULL)
+    {
+        printf("\x1b[31mError: Unable to read NIC from file.\x1b[0m\n");
+        fclose(NICfile);
+        return 1;
+    }
+    fclose(NICfile);
+
+    // Remove newline character from the NIC read from file
+    nicFromFile[strcspn(nicFromFile, "\n")] = 0;
+
+    int validNIC = 0;
+    while (!validNIC)
+    {
+        printf("\x1b[1;32m");
+        printf("NIC: ");
+        printf("\x1b[1;36m");
+        if (scanf("%12s", userInputBuffer) != 1)
+        {
+            printf("\x1b[31m\t\t\t!!!Input error!!! Please try again.\n\x1b[0m");
+            while (getchar() != '\n'); // Clear input buffer
+            continue;
+        }
+        while (getchar() != '\n'); // Clear remaining input buffer
+
+        if (strcmp(userInputBuffer, nicFromFile) == 0)
+        {
+            printf("\x1b[32m\t\t\t!!!NIC number is okay!!!\n\x1b[0m");
+            validNIC = 1;
+        }
+        else
+        {
+            printf("\x1b[31m\t\t\t!!!Invalid NIC!!! Please try again.\n\x1b[0m");
+        }
+    }
+
+    passwordFile = fopen("password.txt", "r");
+    if (passwordFile == NULL)
+    {
+        printf("\x1b[31mError: Unable to open password.txt file.\x1b[0m\n");
+        return 1;
+    }
+
+    char passwordFromFile[10];  // Increased size to 10 (8 + newline + null)
+    char userPasswordInput[10]; // Increased size to 10
+
+    if (fgets(passwordFromFile, sizeof(passwordFromFile), passwordFile) == NULL)
+    {
+        printf("\x1b[31mError: Unable to read password from file.\x1b[0m\n");
+        fclose(passwordFile);
+        return 1;
+    }
+    fclose(passwordFile);
+
+    // Remove newline character from the password read from file
+    passwordFromFile[strcspn(passwordFromFile, "\n")] = 0;
+    printf("\n");
+
+    while (1)
+    {
+        printf("\x1b[1;32m"); // green color
+        printf("Password: ");
+        printf("\x1b[1;36m"); // blue color
+        if (scanf("%9s", userPasswordInput) != 1)
+        {
+            printf("\x1b[31m\t\t\t!!!Input error!!!\n\x1b[0m");
+            while (getchar() != '\n'); // Clear input buffer
+            continue;
+        }
+        while (getchar() != '\n'); // Clear remaining input buffer
+
+        if (strcmp(userPasswordInput, passwordFromFile) == 0)
+        {
+            printf("\x1b[32m");
+            printf("\t\t\t!!!Password is okay!!!\n\n");
+            printf("\x1b[0m");
+            break;
+        }
+        else
+        {
+            printf("\x1b[31m");
+            printf("\t\t\t!!!Invalid Password!!!\n");
+            printf("\x1b[0m");
+        }
+    }
+
+    printf("\x1b[32m");
+    printf("\t\t\t!!!Login Successful!!!\n\n");
+    printf("\t\t -- you are now logged in as a voter --\n");
+    printf("\t\t\t-- you can vote now --\n");
+    printf("\n");
+    printf("\x1b[0m");
+
+    choice = remenu();
+    reswitch();
+            
+
             break;
 
         case 3:
-            return;
+            return 0;
 
         case 4:
             printf("Exiting system...\n");
             userinputMP = 4;
-            return;
+            return 0;
 
         default:
             printf("\n");
@@ -479,4 +623,234 @@ void voterRegister()
         }
 
     } while (choiceRL != 3 && choiceRL != 4);
+}
+
+int remenu()
+{
+    printf("\n");
+    printf("+---------------------------------------------+\n");
+    printf("|          --- Candidate Selection ---        |\n");
+    printf("|---------------------------------------------|\n");
+    printf("|                                             |\n");
+    printf("| Party 1: National People's Power            |\n");
+    printf("|                                             |\n");
+    printf("| 1. Niroshan Silva                           |\n");
+    printf("| 2. Lakmali Perera                           |\n");
+    printf("| 3. Dilshan Fernando                         |\n");
+    printf("|                                             |\n");
+    printf("| Party 2: Samagi Jana Balawegaya             |\n");
+    printf("|                                             |\n");
+    printf("| 4. Priyanka Dias                            |\n");
+    printf("| 5. Chaminda Jayasinghe                      |\n");
+    printf("| 6. Nishadi Bandara                          |\n");
+    printf("|                                             |\n");
+    printf("| Party 3: New Democratic Front               |\n");
+    printf("|                                             |\n");
+    printf("| 7. Asiri Wijesinghe                         |\n");
+    printf("| 8. Kavisha Senanayake                       |\n");
+    printf("| 9. Ranidu Rajapaksa                         |\n");
+    printf("|                                             |\n");
+    printf("| Party 4: Sarvajana Balaya                   |\n");
+    printf("|                                             |\n");
+    printf("| 10. Tharushi De Silva                       |\n");
+    printf("| 11. Nimesh Hewage                           |\n");
+    printf("| 12. Sanali Fonseka                          |\n");
+    printf("|                                             |\n");
+    printf("| Party 5: Democratic Tamil National Alliance |\n");
+    printf("|                                             |\n");
+    printf("| 13. Supun Dissanayake                       |\n");
+    printf("| 14. Manori Gamage                           |\n");
+    printf("| 15. Akila Gunawardena                       |\n");
+    printf("|                                             |\n");
+    printf("|---------------------------------------------|\n");
+    printf("|                                             |\n");
+    printf("| -----------!!!!END!!!!!-----------          |\n");
+    printf("|                                             |\n");
+    printf("+---------------------------------------------+\n");
+    printf("\nEnter the number of your chosen candidate (1-15): ");
+    
+    if (scanf("%d", &choice) != 1)
+    {
+        printf("\n\t--- INVALID INPUT! Please enter a number. ---\n");
+        while (getchar() != '\n'); // Clear input buffer
+        return remenu();
+    }
+    while (getchar() != '\n'); // Clear remaining input buffer
+
+    // Simple input validation
+    if (choice < 1 || choice > 15)
+    {
+        printf("\n\t--- INVALID NUMBER! Please choose a number between 1 and 15. ---\n");
+        return remenu();
+    }
+
+    return choice;
+}
+
+int reswitch()
+{
+    FILE *voter_file = fopen("voters.txt", "a");
+    if (voter_file == NULL)
+    {
+        perror("Error opening voters.txt");
+        return -1;
+    }
+
+    const char *candidate = "";
+    const char *party = "";
+
+    switch (choice)
+    {
+    case 1:
+        candidate = "Niroshan Silva";
+        party = "National People's Power";
+        break;
+    case 2:
+        candidate = "Lakmali Perera";
+        party = "National People's Power";
+        break;
+    case 3:
+        candidate = "Dilshan Fernando";
+        party = "National People's Power";
+        break;
+    case 4:
+        candidate = "Priyanka Dias";
+        party = "Samagi Jana Balawegaya";
+        break;
+    case 5:
+        candidate = "Chaminda Jayasinghe";
+        party = "Samagi Jana Balawegaya";
+        break;
+    case 6:
+        candidate = "Nishadi Bandara";
+        party = "Samagi Jana Balawegaya";
+        break;
+    case 7:
+        candidate = "Asiri Wijesinghe";
+        party = "New Democratic Front";
+        break;
+    case 8:
+        candidate = "Kavisha Senanayake";
+        party = "New Democratic Front";
+        break;
+    case 9:
+        candidate = "Ranidu Rajapaksa";
+        party = "New Democratic Front";
+        break;
+    case 10:
+        candidate = "Tharushi De Silva";
+        party = "Sarvajana Balaya";
+        break;
+    case 11:
+        candidate = "Nimesh Hewage";
+        party = "Sarvajana Balaya";
+        break;
+    case 12:
+        candidate = "Sanali Fonseka";
+        party = "Sarvajana Balaya";
+        break;
+    case 13:
+        candidate = "Supun Dissanayake";
+        party = "Democratic Tamil National Alliance";
+        break;
+    case 14:
+        candidate = "Manori Gamage";
+        party = "Democratic Tamil National Alliance";
+        break;
+    case 15:
+        candidate = "Akila Gunawardena";
+        party = "Democratic Tamil National Alliance";
+        break;
+    default:
+        printf("\n\t--- INVALID NUMBER! ---\n");
+        fclose(voter_file);
+        remenu();
+        return reswitch();
+    }
+
+    // Record the individual vote in voters.txt
+    fprintf(voter_file, "%s (%s):1\n", candidate, party);
+    fclose(voter_file);
+
+    // Update the final vote count in results.txt
+    update_votes(candidate, party);
+
+    printf("\nSUCCESS! You voted for: %s (%s)\n", candidate, party);
+    printf("\t--- Thank you for voting! ---\n");
+
+    return choice;
+}
+
+int update_votes(const char *candidate_name, const char *party_name)
+{
+    FILE *old_file, *new_file;
+    char line[256];
+    char temp_file[] = "temp_results.txt";
+    char search_string[100];
+    int vote_updated = 0;
+    int current_votes;
+
+    // Create the search string
+    snprintf(search_string, sizeof(search_string), "%s", candidate_name);
+
+    // Open the existing results.txt for reading
+    old_file = fopen("results.txt", "r");
+    // Open a temporary file for writing
+    new_file = fopen(temp_file, "w");
+
+    if (new_file == NULL)
+    {
+        perror("Error opening temporary file");
+        if (old_file != NULL)
+            fclose(old_file);
+        return -1;
+    }
+
+    if (old_file != NULL)
+    {
+        // Read line by line from the old file
+        while (fgets(line, sizeof(line), old_file) != NULL)
+        {
+            // Check if the current line contains the candidate's name
+            if (strstr(line, search_string) != NULL)
+            {
+                // Found the line, read the current vote count
+                char *vote_str = strrchr(line, ':');
+                if (vote_str != NULL)
+                {
+                    current_votes = atoi(vote_str + 1);
+                    current_votes++;
+
+                    // Write the updated line to the new file
+                    fprintf(new_file, "Current Votes for %s:%d\n", candidate_name, current_votes);
+                    vote_updated = 1;
+                }
+                else
+                {
+                    // If parsing failed, copy the original line
+                    fputs(line, new_file);
+                }
+            }
+            else
+            {
+                // Not the target line, copy the original line
+                fputs(line, new_file);
+            }
+        }
+        fclose(old_file);
+    }
+
+    // If the candidate was not found, add them with 1 vote
+    if (!vote_updated)
+    {
+        fprintf(new_file, "Current Votes for %s:%d\n", candidate_name, 1);
+    }
+
+    fclose(new_file);
+
+    // Replace the old file with the new file
+    remove("results.txt");
+    rename(temp_file, "results.txt");
+
+    return 0;
 }
