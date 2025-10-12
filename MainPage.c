@@ -861,5 +861,4 @@ int update_votes(const char *candidate_name, const char *party_name)
     remove("results.txt");
     rename(temp_file, "results.txt");
 
-    return 0;
 }
