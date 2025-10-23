@@ -164,7 +164,7 @@ int AdminLogin()
         fgets(Adminusername, 10, stdin);
         remove_newline(Adminusername);
 
-        printf("\x1b[1;36m");
+        printf("\n\x1b[1;36m");
         printf("  Password : ");
         printf("\x1b[1;0m");
         fgets(AdminPassWord, 10, stdin);
@@ -192,7 +192,7 @@ int AdminLogin()
 
                     do
                     {
-                        printf("\x1b[0m");
+                        printf("\n\x1b[0m");
                         printf("+------------------------------------+\n");
                         printf("|                                    |\n");
                         printf("|\x1b[1;33m         -- Admin Panel --         \x1b[0m |\n");
@@ -210,29 +210,68 @@ int AdminLogin()
                         printf("\x1b[1;0m");
                         printf("\x1b[1;36m");
                         scanf("%d", &adminchoice);
-                        while (getchar() != '\n'); // Clear buffer
+                        while (getchar() != '\n')
+                            ; // Clear buffer
 
                         switch (adminchoice)
                         {
                         case 1:
-                            printf("\n\x1b[1;32m       ----! Voting Results !----\x1b[0m\n");
-                            // Add code to display results
-                            break;
 
-                        case 2:
-                            printf("\n\x1b[1;32m       ----! Reset Voting !----\x1b[0m\n");
-                            // Add code to reset votes
-                            break;
+                            printf("\n\x1b[1;32m       ----! Voting Results !----\x1b[0m\n\n");
 
-                        case 3:
-                            printf("\n\x1b[1;32m       ----! Exiting Admin Panel !----\x1b[0m\n");
-                            break;
+                            FILE *resultsfile = fopen("results.txt", "r");
 
-                        default:
-                            printf("\n");
-                            printf("\x1b[1;31m");
-                            printf("\n       ----! invalied Choice !----\n");
-                            printf("\x1b[0m");
+                            if (resultsfile == NULL)
+                            {
+                                printf("\x1b[1;31m       ----! Error! no file founded !----\x1b[0m\n");
+                            }
+                            else
+                            {
+                                char Result[1000];
+                                int content = 0;
+
+                                printf("\n\x1b[1;36m");
+                                printf("+---------------------------------------------------------------+\n");
+                                printf("|                       VOTING RESULTS                          |\n");
+                                printf("+---------------------------------------------------------------+\n");
+                                printf("\n\x1b[0m");
+
+                                // Read and display each line from results.txt
+                                while (fgets(Result, sizeof(Result), resultsfile) != NULL)
+                                {
+                                    content = 1;
+                                    printf("  %s", Result);
+                                }
+
+                                if (!content)
+                                {
+                                    printf("\x1b[1;33m       No votes recorded yet.\x1b[0m\n");
+                                }
+
+                                fclose(resultsfile);
+
+                                break;
+
+                            case 2:
+                                printf("\n\x1b[1;32m       ----! Reset Voting !----\x1b[0m\n");
+                                FILE *pfile = fopen("results.txt", "w");
+                                fprintf(pfile, "");
+                                fclose(pfile);
+                                printf("\n\x1b[1;32m       ----! Votes Reset Successfull !----\x1b[0m\n");
+                                break;
+
+                            case 3:
+                                printf("\n\x1b[1;32m       ----! Exiting Admin Panel !----\x1b[0m\n");
+                                break;
+
+                            default:
+                                printf("\n");
+                                printf("\x1b[1;31m");
+                                printf("\n       ----! invalied Choice !----\n");
+                                printf("\x1b[0m");
+                                printf("\n");
+                            }
+
                             printf("\n");
                         }
 
@@ -244,6 +283,8 @@ int AdminLogin()
                 }
             }
         }
+
+        printf("\n");
 
         fclose(fptr);
         break;
@@ -297,7 +338,8 @@ void candidate()
     printf("\n                   \x1b[1;32mPlease enter your details below\x1b[0m                            \n");
     printf("\x1b[0m");
 
-    while (getchar() != '\n');
+    while (getchar() != '\n')
+        ;
 
     printf("\n                   1. Name: ");
     fgets(name, sizeof(name), stdin);
@@ -434,7 +476,8 @@ int voterRegister()
 
             printf("\n");
 
-            while (getchar() != '\n');
+            while (getchar() != '\n')
+                ;
 
             printf("\x1b[1;32m");
             printf("\tName:");
@@ -507,7 +550,8 @@ int voterRegister()
             printf("\n");
             printf("\x1b[0m");
 
-            while (getchar() != '\n');
+            while (getchar() != '\n')
+                ;
             break;
 
         case 2:
@@ -552,10 +596,12 @@ int voterRegister()
                 if (scanf("%12s", userInputBuffer) != 1)
                 {
                     printf("\x1b[31m\t\t\t!!!Input error!!! Please try again.\n\x1b[0m");
-                    while (getchar() != '\n');
+                    while (getchar() != '\n')
+                        ;
                     continue;
                 }
-                while (getchar() != '\n');
+                while (getchar() != '\n')
+                    ;
 
                 if (strcmp(userInputBuffer, nicFromFile) == 0)
                 {
@@ -597,10 +643,12 @@ int voterRegister()
                 if (scanf("%9s", userPasswordInput) != 1)
                 {
                     printf("\x1b[31m\t\t\t!!!Input error!!!\n\x1b[0m");
-                    while (getchar() != '\n');
+                    while (getchar() != '\n')
+                        ;
                     continue;
                 }
-                while (getchar() != '\n');
+                while (getchar() != '\n')
+                    ;
 
                 if (strcmp(userPasswordInput, passwordFromFile) == 0)
                 {
@@ -646,7 +694,7 @@ int voterRegister()
         }
 
     } while (choiceRL != 3 && choiceRL != 4);
-    
+
     return 0;
 }
 
@@ -879,6 +927,4 @@ int update_votes(const char *candidate_name, const char *party_name)
     // Replace the old file with the new file
     remove("results.txt");
     rename(temp_file, "results.txt");
-
-
 }
