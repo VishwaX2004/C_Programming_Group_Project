@@ -1,13 +1,13 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>         //integer to string using atoi
 #include <string.h>
 
-// Function prototypes
+// Function 
 int remenu();
 int reswitch();
-int update_votes(const char *candidate_name, const char *party_name);
+int update_votes(const char *candidate_name, const char *party_name); // whatever we dont change candidate name and party in update_votes only read.
 
-int choice;
+int choice;                  //store the integer input from the user
 
 int main() {
     choice = remenu();
@@ -15,7 +15,7 @@ int main() {
     return 0;
 }
 
-// Function to display the candidate selection menu and get user input
+                             // Function to display the candidate selection menu and get user input
 int remenu() {
     printf("\n");
     printf("+---------------------------------------------+\n");
@@ -63,7 +63,7 @@ int remenu() {
     // Simple input validation
     if (choice < 1 || choice > 15) {
         printf("\n\t--- INVALID NUMBER! Please choose a number between 1 and 15. ---\n");
-        return remenu(); // Re-prompt for valid input
+        return remenu();               // funtion calls it self.
     }
     
     return choice;
@@ -71,10 +71,10 @@ int remenu() {
 
 // Function to handle the user's vote choice
 int reswitch() {
-    // The voter_file will still be opened in "a" (append) mode
-    FILE *voter_file = fopen("voters.txt", "a");
+    
+    FILE *voter_file = fopen("voters.txt", "a");// The voter_file will still be opened in "a" (append) mode  read+write
     if (voter_file == NULL) {
-        perror("Error opening voters.txt");
+        perror("Error opening voters.txt"); // find system errors and print what is error.. we can use printf but perror is idel.
         return -1;
     }
     
@@ -119,7 +119,6 @@ int reswitch() {
             party = "New Democratic Front";
             break;
         case 10:
-            // Correcting the name saved in the file from the original code
             candidate = "Tharushi De Silva"; 
             party = "Sarvajana Balaya";
             break;
@@ -144,11 +143,10 @@ int reswitch() {
             party = "Democratic Tamil National Alliance";
             break;
         default:
-            // This case should not be reached with the validation in remenu,
-            // but kept for robustness.
+           
             printf("\n\t--- INVALID NUMBER! ---\n");
             fclose(voter_file);
-            remenu();
+            remenu();           // call menu funtion 
             return reswitch();
     }
     
@@ -167,64 +165,64 @@ int reswitch() {
 
 // NEW CORE FUNCTION: Reads and updates the total votes in results.txt
 int update_votes(const char *candidate_name, const char *party_name) {
-    FILE *old_file, *new_file;
+    FILE *old_file, *new_file;  
     char line[256];
-    char temp_file[] = "temp_results.txt";
+    char temp_file[] = "temp_results.txt";          // create temporarily file to stores data.
     char search_string[100];
-    int vote_updated = 0;
+    int vote_updated = 0;                           //using varible votes update or not.
     int current_votes;
 
-    // Create the search string
-    snprintf(search_string, sizeof(search_string), "%s", candidate_name);
+   
+    snprintf(search_string, sizeof(search_string), "%s", candidate_name);  // Create the search string......collect different type of data collect and create one string...
     
-    // Open the existing results.txt for reading
-    old_file = fopen("results.txt", "r");
-    // Open a temporary file for writing
-    new_file = fopen(temp_file, "w");
+   
+    old_file = fopen("results.txt", "r");            // Open the existing results.txt for reading
+   
+    new_file = fopen(temp_file, "w");                // Open a temporary file for writing
 
     if (new_file == NULL) {
         perror("Error opening temporary file");
         if (old_file != NULL) fclose(old_file);
-        return -1;
+        return -1;      // process is dump... if code is fail sytem gives -1.
     }
 
     if (old_file != NULL) {
-        // Read line by line from the old file
-        while (fgets(line, sizeof(line), old_file) != NULL) {
-            // Check if the current line contains the candidate's name
-            if (strstr(line, search_string) != NULL) {
-                // Found the line, read the current vote count
-                char *vote_str = strrchr(line, ':');
+        
+        while (fgets(line, sizeof(line), old_file) != NULL) {                              // Read line by line from the old file
+           
+            if (strstr(line, search_string) != NULL) {      // Check if the current line contains the candidate's name....Something is string search other strings...
+                // 
+                char *vote_str = strrchr(line, ':');                            // Found the line,if find name then check and  read the current vote count
                 if (vote_str != NULL) {
-                    current_votes = atoi(vote_str + 1); // Convert the vote count to an integer
+                    current_votes = atoi(vote_str + 1);  // ...ASCII to Integer...check strings and find numbers its convert to integer
                     current_votes++; // Increment the vote count
                     
-                    // Write the updated line to the new file
-                    fprintf(new_file, "Current Votes for %s:%d\n", candidate_name, current_votes);
-                    vote_updated = 1;
+                    
+                    fprintf(new_file, "Current Votes for %s:%d\n", candidate_name, current_votes); // Write the updated line to the new file
+                    vote_updated = 1; // find candidate and updated the the value.. 1=updated 0=not updated. 
                 } else {
-                    // If parsing failed, copy the original line
-                    fputs(line, new_file);
+                   
+                    fputs(line, new_file);       // If dosent not name.... copy the original line
                 }
             } else {
-                // Not the target line, copy the original line
-                fputs(line, new_file);
+               
+                fputs(line, new_file);       // Not the target line, copy the original line
             }
         }
         fclose(old_file);
     }
 
-    // If the candidate was not found, they must be new, so add them with 1 vote
-    if (!vote_updated) {
-        // This is where a new candidate entry is made with a vote of 1
-        fprintf(new_file, "Current Votes for %s:%d\n", candidate_name, 1);
+    
+    if (!vote_updated) {  // If the candidate was not found, they must be new, so add them with 1 vote.....New candidate.....
+        
+        fprintf(new_file, "Current Votes for %s:%d\n", candidate_name, 1);          // This is where a new candidate entry is made with a vote of 1
     }
     
     fclose(new_file);
 
-    // Replace the old file with the new file
-    remove("results.txt");
-    rename(temp_file, "results.txt");
+    
+    remove("results.txt");                          // remove old file rename temp_file to results file...
+    rename(temp_file, "results.txt");           
     
     return 0;
 }
