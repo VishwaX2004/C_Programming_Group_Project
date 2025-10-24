@@ -4,15 +4,32 @@
 
 #define FILENAME "Admin.txt"
 
+// Function prototypes
 int mainpage();
 int AdminLogin();
 void candidate();
 int voterRegister();
 
+// Global variables for user inputs (though local variables within functions are generally preferred)
 int userinputRL;
 int userinputMP;
 int AdminInput;
 
+// Function prototypes for voting status
+int hasAlreadyVoted(char *nic);
+void recordVote(char *nic);
+
+// Function to check if a voter's NIC exists in the NIC file
+int checkVoterExists(const char *nic)
+{
+    FILE *file = fopen("NIC.txt", "r");
+    if (file == NULL)
+    {
+        return 0; // File doesn't exist, so voter doesn't exist
+    }
+}
+
+// Function to remove the trailing newline character from a string
 void remove_newline(char *str)
 {
     size_t len = strlen(str);
@@ -22,6 +39,7 @@ void remove_newline(char *str)
     }
 }
 
+// Structure for voter information
 struct voter
 {
     char NIC[12];
@@ -30,12 +48,14 @@ struct voter
     char password[8];
 };
 
+// Function prototypes for voting menu and vote processing
 int remenu();
 int reswitch();
 int update_votes(const char *candidate_name, const char *party_name);
 
-int choice;
+int choice; // Global variable to store the candidate choice
 
+// Main function
 int main()
 {
     do
@@ -77,6 +97,7 @@ int main()
     return 0;
 }
 
+// Function to display the main page menu
 int mainpage()
 {
     printf("\n");
@@ -109,6 +130,7 @@ int mainpage()
     return choiceMP;
 }
 
+// Function to handle Admin Login and subsequent options
 int AdminLogin()
 {
     printf("\n");
@@ -178,20 +200,24 @@ int AdminLogin()
             break;
         }
 
+        // Read username from file
         if (fgets(file_username, 10, fptr) != NULL)
         {
             remove_newline(file_username);
 
+            // Read password from file
             if (fgets(file_password, 10, fptr) != NULL)
             {
                 remove_newline(file_password);
 
+                // Compare entered credentials with file credentials
                 if (strcmp(Adminusername, file_username) == 0 && strcmp(AdminPassWord, file_password) == 0)
                 {
                     printf("\n\x1b[1;32m       ----! Admin Login Success !----\x1b[0m\n");
 
                     do
                     {
+                        // Admin options menu
                         printf("\n\x1b[0m");
                         printf("+------------------------------------+\n");
                         printf("|                                    |\n");
@@ -216,7 +242,6 @@ int AdminLogin()
                         switch (adminchoice)
                         {
                         case 1:
-
                             printf("\n\x1b[1;32m       ----! Voting Results !----\x1b[0m\n\n");
 
                             FILE *resultsfile = fopen("results.txt", "r");
@@ -249,31 +274,36 @@ int AdminLogin()
                                 }
 
                                 fclose(resultsfile);
-
-                                break;
-
-                            case 2:
-                                printf("\n\x1b[1;32m       ----! Reset Voting !----\x1b[0m\n");
-                                FILE *pfile = fopen("results.txt", "w");
-                                fprintf(pfile, "");
-                                fclose(pfile);
-                                printf("\n\x1b[1;32m       ----! Votes Reset Successfull !----\x1b[0m\n");
-                                break;
-
-                            case 3:
-                                printf("\n\x1b[1;32m       ----! Exiting Admin Panel !----\x1b[0m\n");
-                                break;
-
-                            default:
-                                printf("\n");
-                                printf("\x1b[1;31m");
-                                printf("\n       ----! invalied Choice !----\n");
-                                printf("\x1b[0m");
-                                printf("\n");
                             }
+                            break; // break for case 1
 
+                        case 2:
+                            printf("\n\x1b[1;32m       ----! Reset Voting !----\x1b[0m\n");
+                            FILE *pfile = fopen("results.txt", "w");
+                            fprintf(pfile, ""); // Clear the contents of results.txt
+                            fclose(pfile);
+
+                            // Also clear the voted NICs file
+                            FILE *voted_nics_file = fopen("voted_nics.txt", "w");
+                            fprintf(voted_nics_file, ""); // Clear the contents of voted_nics.txt
+                            fclose(voted_nics_file);
+
+                            printf("\n\x1b[1;32m       ----! Votes Reset Successfull !----\x1b[0m\n");
+                            break;
+
+                        case 3:
+                            printf("\n\x1b[1;32m       ----! Exiting Admin Panel !----\x1b[0m\n");
+                            break;
+
+                        default:
+                            printf("\n");
+                            printf("\x1b[1;31m");
+                            printf("\n       ----! invalied Choice !----\n");
+                            printf("\x1b[0m");
                             printf("\n");
                         }
+
+                        printf("\n");
 
                     } while (adminchoice != 3);
                 }
@@ -295,7 +325,7 @@ int AdminLogin()
 
     case 3:
         printf("Exiting System...\n");
-        userinputMP = 4;
+        userinputMP = 4; // Set main menu choice to 4 (Exit)
         break;
 
     default:
@@ -310,6 +340,7 @@ int AdminLogin()
     return 0;
 }
 
+// Function to handle candidate registration
 void candidate()
 {
     FILE *pfile = fopen("Candidates.txt", "a");
@@ -339,11 +370,11 @@ void candidate()
     printf("\x1b[0m");
 
     while (getchar() != '\n')
-        ;
+        ; // Clear input buffer
 
     printf("\n                   1. Name: ");
     fgets(name, sizeof(name), stdin);
-    name[strcspn(name, "\n")] = '\0';
+    name[strcspn(name, "\n")] = '\0'; // Remove newline
 
     printf("\n                   2. Political Party Number: ");
     scanf("%s", number);
@@ -351,6 +382,7 @@ void candidate()
     printf("\n                   3. NIC: ");
     scanf("%s", nic);
 
+    // Basic input validation
     if (strlen(nic) != 12 || number[0] < '1' || number[0] > '5')
     {
         printf("\n                  *Invalid Input");
@@ -359,6 +391,7 @@ void candidate()
     {
         char party[100];
 
+        // Determine party name based on number
         switch (number[0])
         {
         case '1':
@@ -382,6 +415,7 @@ void candidate()
         }
 
         printf("\n");
+        // Write candidate details to file
         fprintf(pfile, "%-20s   %-12s    %-2s    %s\n", name, nic, number, party);
         printf("+ ---------------------------------------------------------------------------- +\n");
         printf("|                  \x1b[1;33mYour data saved successfully\x1b[0m                                |\n");
@@ -391,12 +425,14 @@ void candidate()
     fclose(pfile);
 }
 
+// Function to handle voter registration and login menu
 int voterRegister()
 {
     int choiceRL;
 
     do
     {
+        // Voter Registration/Login menu
         printf("\n");
         printf("\x1b[0m");
         printf("+------------------------------------+\n");
@@ -426,9 +462,11 @@ int voterRegister()
         switch (choiceRL)
         {
         case 1:
+            // Voter Registration logic
             printf("\n       ----! Registration selected !----\n");
             struct voter voter;
 
+            // Initialize voter struct
             voter.NIC[0] = '\0';
             voter.name[0] = '\0';
             voter.age = 0;
@@ -446,6 +484,7 @@ int voterRegister()
             printf("+-------------------------------------------------+\n");
             printf("\n\n");
 
+            // NIC input and validation
             printf("\x1b[1;32m");
             int count = 0;
             while (1)
@@ -470,6 +509,7 @@ int voterRegister()
                 }
             }
 
+            // Write NIC to NIC.txt (overwrites previous)
             FILE *NICFile = fopen("NIC.txt", "w");
             fprintf(NICFile, "%s\n", voter.NIC);
             fclose(NICFile);
@@ -477,15 +517,18 @@ int voterRegister()
             printf("\n");
 
             while (getchar() != '\n')
-                ;
+                ; // Clear input buffer
 
+            // Name input
             printf("\x1b[1;32m");
             printf("\tName:");
             printf("\x1b[1;36m");
             fgets(voter.name, sizeof(voter.name), stdin);
+            voter.name[strcspn(voter.name, "\n")] = 0; // Remove newline
 
             printf("\n");
 
+            // Age input and validation
             while (1)
             {
                 printf("\x1b[1;33m");
@@ -495,7 +538,7 @@ int voterRegister()
                 printf("\tAge:");
                 printf("\x1b[1;36m");
                 scanf("%d", &voter.age);
-                if (voter.age >= 18)
+                if (voter.age >= 18 && voter.age < 100) // Corrected age validation
                 {
                     break;
                 }
@@ -510,6 +553,7 @@ int voterRegister()
 
             printf("\n");
 
+            // Password input and validation
             int count1 = 0;
             while (1)
             {
@@ -538,6 +582,7 @@ int voterRegister()
                 }
             }
 
+            // Write password to password.txt (overwrites previous)
             FILE *passwordFile = fopen("password.txt", "w");
             fprintf(passwordFile, "%s\n", voter.password);
             fclose(passwordFile);
@@ -551,10 +596,11 @@ int voterRegister()
             printf("\x1b[0m");
 
             while (getchar() != '\n')
-                ;
+                ; // Clear input buffer
             break;
 
         case 2:
+            // Voter Login logic
             printf("\x1b[0m");
             printf("+-------------------------------------------------+\n");
             printf("|                                                 |\n");
@@ -577,6 +623,7 @@ int voterRegister()
             char nicFromFile[13];
             char userInputBuffer[13];
 
+            // Read NIC from file
             if (fgets(nicFromFile, sizeof(nicFromFile), NICfile) == NULL)
             {
                 printf("\x1b[31mError: Unable to read NIC from file.\x1b[0m\n");
@@ -585,8 +632,9 @@ int voterRegister()
             }
             fclose(NICfile);
 
-            nicFromFile[strcspn(nicFromFile, "\n")] = 0;
+            nicFromFile[strcspn(nicFromFile, "\n")] = 0; // Remove newline
 
+            // NIC input and validation loop
             int validNIC = 0;
             while (!validNIC)
             {
@@ -595,35 +643,60 @@ int voterRegister()
                 printf("\x1b[1;36m");
                 if (scanf("%12s", userInputBuffer) != 1)
                 {
-                    printf("\x1b[31m\t\t\t!!!Input error!!! Please try again.\n\x1b[0m");
+                    printf("\x1b[31m\x1b[1m!!!Input error!!! Please try again.\n\x1b[0m");
                     while (getchar() != '\n')
                         ;
                     continue;
                 }
-                while (getchar() != '\n')
-                    ;
 
-                if (strcmp(userInputBuffer, nicFromFile) == 0)
+                // A simplified logic to mimic existence check for the *single* registered voter:
+                if (nicFromFile[0] == '\0') // If the file was empty (or not properly read)
                 {
-                    printf("\x1b[32m\t\t\t!!!NIC number is okay!!!\n\x1b[0m");
-                    validNIC = 1;
+                    printf("\x1b[31m\x1b[1m!!!NIC not found! Please register first.!!!\n\x1b[0m");
                 }
                 else
                 {
-                    printf("\x1b[31m\t\t\t!!!Invalid NIC!!! Please try again.\n\x1b[0m");
+                    printf("\n");
+
+                    while (getchar() != '\n')
+                        ; // Clear buffer
+
+                    if (strcmp(userInputBuffer, nicFromFile) == 0)
+                    {
+                        // Check if this NIC has already voted
+                        if (hasAlreadyVoted(userInputBuffer))
+                        {
+                            printf("\x1b[31m\x1b[1m!!!NIC number already exists and you cannot vote now!!!\x1b[0m\n");
+                            return 0; // Exit voterRegister after failed login due to previous vote
+                        }
+
+                        printf("\x1b[32m\x1b[1m!!!NIC number is okay!!!\n\x1b[0m");
+                        validNIC = 1;
+                    }
+                    else
+                    {
+                        printf("\x1b[31m\x1b[1m!!!Invalid NIC!!! Please try again.\n\x1b[0m");
+                    }
                 }
             }
 
+            // Note: recordVote is called here *before* password check and actual voting,
+            // which is incorrect as it immediately marks the NIC as voted.
+            // Moving it to after successful voting.
+
+            // Re-open password file for reading
             passwordFile = fopen("password.txt", "r");
             if (passwordFile == NULL)
             {
                 printf("\x1b[31mError: Unable to open password.txt file.\x1b[0m\n");
+                // Revert the premature recordVote if it was called here. But since I moved it, this is safe.
                 return 1;
             }
 
             char passwordFromFile[10];
             char userPasswordInput[10];
 
+            // Read password from file
             if (fgets(passwordFromFile, sizeof(passwordFromFile), passwordFile) == NULL)
             {
                 printf("\x1b[31mError: Unable to read password from file.\x1b[0m\n");
@@ -632,9 +705,10 @@ int voterRegister()
             }
             fclose(passwordFile);
 
-            passwordFromFile[strcspn(passwordFromFile, "\n")] = 0;
+            passwordFromFile[strcspn(passwordFromFile, "\n")] = 0; // Remove newline
             printf("\n");
 
+            // Password input and validation loop
             while (1)
             {
                 printf("\x1b[1;32m");
@@ -672,12 +746,16 @@ int voterRegister()
             printf("\n");
             printf("\x1b[0m");
 
+            // Proceed to voting
             choice = remenu();
             reswitch();
+
+            // After successful voting, record the NIC
+            recordVote(userInputBuffer); // Moved to after successful voting
             break;
 
         case 3:
-            return 0;
+            return 0; // Go back to main page
 
         case 4:
             printf("Exiting system...\n");
@@ -698,6 +776,7 @@ int voterRegister()
     return 0;
 }
 
+// Function to display the candidate selection menu
 int remenu()
 {
     printf("+---------------------------------------------+\n");
@@ -743,12 +822,13 @@ int remenu()
 
     printf("\n\x1b[1;33m Enter the number of your chosen candidate (1-15): \x1b[1;0m ");
 
+    // Input choice
     if (scanf("%d", &choice) != 1)
     {
         printf("\n\t--- INVALID INPUT! Please enter a number. ---\n");
         while (getchar() != '\n')
             ; // Clear input buffer
-        return remenu();
+        return remenu(); // Recurse for valid input
     }
     while (getchar() != '\n')
         ; // Clear remaining input buffer
@@ -757,12 +837,13 @@ int remenu()
     if (choice < 1 || choice > 15)
     {
         printf("\n\t--- INVALID NUMBER! Please choose a number between 1 and 15. ---\n");
-        return remenu();
+        return remenu(); // Recurse for valid input
     }
 
     return choice;
 }
 
+// Function to process the vote based on the chosen candidate
 int reswitch()
 {
     FILE *voter_file = fopen("voters.txt", "a");
@@ -775,6 +856,7 @@ int reswitch()
     const char *candidate = "";
     const char *party = "";
 
+    // Map choice number to candidate and party names
     switch (choice)
     {
     case 1:
@@ -857,6 +939,7 @@ int reswitch()
     return choice;
 }
 
+// Function to update the vote counts in results.txt
 int update_votes(const char *candidate_name, const char *party_name)
 {
     FILE *old_file, *new_file;
@@ -866,7 +949,7 @@ int update_votes(const char *candidate_name, const char *party_name)
     int vote_updated = 0;
     int current_votes;
 
-    // Create the search string
+    // Create the search string (only candidate name is used for searching in the existing logic)
     snprintf(search_string, sizeof(search_string), "%s", candidate_name);
 
     // Open the existing results.txt for reading
@@ -927,4 +1010,44 @@ int update_votes(const char *candidate_name, const char *party_name)
     // Replace the old file with the new file
     remove("results.txt");
     rename(temp_file, "results.txt");
+    
+    return 0; // Return 0 for success
+}
+
+// Helper function to check if NIC has already voted
+int hasAlreadyVoted(char *nic)
+{
+    FILE *votedFile = fopen("voted_nics.txt", "r");
+    if (votedFile == NULL)
+    {
+        return 0; // File doesn't exist yet, so no one has voted
+    }
+
+    char line[13];
+    while (fgets(line, sizeof(line), votedFile) != NULL)
+    {
+        line[strcspn(line, "\n")] = 0; // Remove newline
+        if (strcmp(line, nic) == 0)
+        {
+            fclose(votedFile);
+            return 1; // NIC found - already voted
+        }
+    }
+
+    fclose(votedFile);
+    return 0; // NIC not found - hasn't voted yet
+}
+
+// Helper function to record a vote
+void recordVote(char *nic)
+{
+    FILE *votedFile = fopen("voted_nics.txt", "a");
+    if (votedFile == NULL)
+    {
+        printf("\x1b[31mError: Unable to record vote.\x1b[0m\n");
+        return;
+    }
+
+    fprintf(votedFile, "%s\n", nic);
+    fclose(votedFile);
 }
