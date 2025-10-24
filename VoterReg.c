@@ -75,7 +75,7 @@ int main() {
             printf("\tAge:"); // voter's age
             printf("\x1b[1;36m");
             scanf("%d", &voter.age);
-            if (voter.age >= 18) {
+            if (voter.age >= 18 && voter.age <= 100) {
                 break;
             } else {
                 printf("\x1b[1;31m"); //red color
