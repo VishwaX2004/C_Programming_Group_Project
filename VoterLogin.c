@@ -6,15 +6,15 @@ void recordVote(char *nic);
 
 int checkVoterExists(const char *nic)
 {
-    FILE *file = fopen("NIC.txt", "r");
-    if (file == NULL)
+    FILE *NICfile = fopen("NIC.txt", "r");
+    if (NICfile == NULL)
     {
         return 0;                         // File doesn't exist, so voter doesn't exist
     }
 
     char line[64];
     int found = 0;
-    while (fgets(line, sizeof(line), file) != NULL)
+    while (fgets(line, sizeof(line), NICfile) != NULL)
     {
         line[strcspn(line, "\n")] = 0; // Remove newline
         if (strcmp(line, nic) == 0)
@@ -24,7 +24,7 @@ int checkVoterExists(const char *nic)
         }
     }
 
-    fclose(file);
+    fclose(NICfile);
     return found;
 }
 
@@ -32,8 +32,8 @@ int main() {
 
        // Open the file and read the NIC number
 
-     FILE *NICfile = fopen("NIC.txt", "r");
-    if (NICfile == NULL) {
+     FILE *NICFile = fopen("NIC.txt", "r");
+    if (NICFile == NULL) {
         printf("\x1b[31mError: Unable to open NIC.txt file.\x1b[0m\n");
         return 1;
     }
@@ -41,28 +41,13 @@ int main() {
     char nicFromFile[12];                      // NEW: Separate buffer for the NIC from file
     char userInputBuffer[12];                 // Keep a separate buffer for user input
 
-   if (fgets(nicFromFile, sizeof(nicFromFile), NICfile) == NULL)
+   if (fgets(nicFromFile, sizeof(nicFromFile), NICFile) == NULL)
 {
     printf("\x1b[31mError: Unable to read NIC from file.\x1b[0m\n");
-    fclose(NICfile);
+    fclose(NICFile);
     return 1;
 }
-    fclose(NICfile);
-     FILE *NICfile = fopen("NIC.txt", "r");
-    if (NICfile == NULL) {
-        printf("\x1b[31mError: Unable to open NIC.txt file.\x1b[0m\n");
-        return 1;
-    }
-
-    char nicFromFile[12];                      // NEW: Separate buffer for the NIC from file
-    char userInputBuffer[12];                 // Keep a separate buffer for user input
-
-   if (fgets(nicFromFile, sizeof(nicFromFile), NICfile) == NULL)
-{
-    printf("\x1b[31mError: Unable to read NIC from file.\x1b[0m\n");
-    return 1;
-}
-    fclose(NICfile);
+    fclose(NICFile);
 
     // Remove newline character from the NIC read from file
     // as fgets might include it and strcmp will fail the comparison.
@@ -80,7 +65,7 @@ int main() {
         continue;
     }
 
-    if (!checkVoterExists(nicFromFile))
+    if (nicFromFile[0] == '\0')
     {
         printf("\x1b[31m\x1b[1m!!!NIC not found! Please register first.!!!\n\x1b[0m");
     }
